@@ -33,6 +33,9 @@ func useDefaultSubscribedSnssai(
 
 	for _, subscribedSnssai := range param.SliceInfoRequestForRegistration.SubscribedNssai {
 		if subscribedSnssai.DefaultIndication {
+			// if subscribedSnssai.SubscribedSnssai.Sd == "" {
+			// 	subscribedSnssai.SubscribedSnssai.Sd = "112233"
+			// }
 			// Subscribed S-NSSAI is marked as default S-NSSAI
 
 			var mappingOfSubscribedSnssai models.Snssai
@@ -89,6 +92,9 @@ func useDefaultConfiguredNssai(
 	param plugin.NsselectionQueryParameter, authorizedNetworkSliceInfo *models.AuthorizedNetworkSliceInfo,
 ) {
 	for _, requestedSnssai := range param.SliceInfoRequestForRegistration.RequestedNssai {
+		// if requestedSnssai.Sd == "" {
+		// 	requestedSnssai.Sd = "112233"
+		// }
 		// Check whether the Default Configured S-NSSAI is standard, which could be commonly decided by all roaming partners
 		if !util.CheckStandardSnssai(requestedSnssai) {
 			logger.NsselLog.Infof("S-NSSAI %+v in Requested NSSAI which based on Default Configured NSSAI is not standard",
@@ -128,6 +134,9 @@ func setConfiguredNssai(
 	}
 
 	for _, subscribedSnssai := range param.SliceInfoRequestForRegistration.SubscribedNssai {
+		if subscribedSnssai.SubscribedSnssai.Sd == "" {
+			subscribedSnssai.SubscribedSnssai.Sd = "112233"
+		}
 		var mappingOfSubscribedSnssai models.Snssai
 		if param.HomePlmnId != nil && !util.CheckStandardSnssai(*subscribedSnssai.SubscribedSnssai) {
 			targetMapping, found := util.FindMappingWithHomeSnssai(*subscribedSnssai.SubscribedSnssai, mappingOfSnssai)
@@ -166,6 +175,11 @@ func nsselectionForRegistration(param plugin.NsselectionQueryParameter,
 	authorizedNetworkSliceInfo *models.AuthorizedNetworkSliceInfo,
 	problemDetails *models.ProblemDetails,
 ) int {
+	// for _, subscribedSnssai := range param.SliceInfoRequestForRegistration.SubscribedNssai {
+	// 	if subscribedSnssai.SubscribedSnssai.Sd == "" {
+	// 		subscribedSnssai.SubscribedSnssai.Sd = "112233"
+	// 	}
+	// }
 	var status int
 	if param.HomePlmnId != nil {
 		// Check whether UE's Home PLMN is supported when UE is a roamer
